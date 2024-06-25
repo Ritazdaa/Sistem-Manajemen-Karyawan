@@ -92,6 +92,9 @@
             padding: 20px;
             overflow-y: auto;
         }
+        .sidebar ul li:hover {
+            background-color: #34495e;
+        }
     </style>
 </head>
 <body>
@@ -101,8 +104,11 @@
             <li><a href="{{ route('dashboard.index') }}">Home</a></li>
             <li><a href="{{ route('dashboard.showDataPengguna') }}">Data Pengguna</a></li>
             <li><a href="{{ route('dashboard.absenKaryawan') }}">Absen</a></li>
+            <li><a href="{{ route('riwayat_absen.index') }}">Riwayat Absen</a></li>
             <li><a href="{{ route('profil.show') }}">Profil</a></li>
-            <li><a href="#">Informasi</a></li>
+            <li><a href="{{ route('pengumuman.index') }}">Pengumuman</a></li>
+            <li><a href="{{ route('informasi.gaji') }}">Informasi</a></li>
+    
         </ul>
         <div class="logout">
             <a href="{{ route('login.logout') }}" class="btn btn-danger">Logout</a>
@@ -118,11 +124,71 @@
                 </div>
             </nav>
         </header>
+        
         <main>
-            <h2>Selamat Datang,</h2>
-            <h3>Ini adalah halaman Dashboard</h3>
+        <img src="img/foto_dashboardd.jpg" alt="User Image" class="img-fluid mb-4" />
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        
+                        <center><h1>Diagram Pegawai</h1></center>
+                        <div id="container"></div>
+                        <script src="https://code.highcharts.com/highcharts.js"></script>
+                        <script type="text/javascript">
+                            var userData = {!! json_encode($userData) !!};
+                            Highcharts.chart('container', {
+                                title: {
+                                    text: 'User Baru 2024'
+                                },
+                                subtitle: {
+                                    text: 'User'
+                                },
+                                xAxis: {
+                                    categories: ['Jun',
+                                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: 'Number of New Users'
+                                    }
+                                },
+                                legend: {
+                                    layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle'
+                                },
+                                plotOptions: {
+                                    series: {
+                                        allowPointSelect: true
+                                    }
+                                },
+                                series: [{
+                                    name: 'New Users',
+                                    data: userData
+                                }],
+                                responsive: {
+                                    rules: [{
+                                        condition: {
+                                            maxWidth: 500
+                                        },
+                                        chartOptions: {
+                                            legend: {
+                                                layout: 'horizontal',
+                                                align: 'center',
+                                                verticalAlign: 'bottom'
+                                            }
+                                        }
+                                    }]
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
     <script>
         const toggleBtn = document.getElementById('toggle-btn');

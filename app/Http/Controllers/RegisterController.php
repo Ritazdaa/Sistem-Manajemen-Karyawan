@@ -16,30 +16,29 @@ class RegisterController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'namaInput' => 'required',
-            'emailInput' => 'required|email',
-            'nipInput' => 'required|numeric',
-            'jabatanInput' => 'required',
-            'passwordInput' => 'required|min:8|confirmed',
-        ]);
+{
+    $request->validate([
+        'namaInput' => 'required',
+        'emailInput' => 'required|email',
+        'nipInput' => 'required|numeric', 
+        'jabatanInput' => 'required',
+        'passwordInput' => 'required|min:8|confirmed',
+    ]);
 
-        // Debugging: log the request data
-        \Log::info($request->all());
+    // Debugging: log the request data
+    \Log::info($request->all());
 
-        $query = User::create([
-            'name' => $request->namaInput,
-            'email' => $request->emailInput,
-            'nip' => $request->nipInput,
-            'jabatan' => $request->jabatanInput,
-            'password' => Hash::make($request->passwordInput)
-        ]);
+    $query = User::create([
+        'name' => $request->namaInput,
+        'email' => $request->emailInput,
+        'nip' => $request->nipInput, 
+        'jabatan' => $request->jabatanInput,
+        'password' => Hash::make($request->passwordInput)
+    ]);
 
-        if ($query) {
-            return redirect()->route('login');
-        } else {
-            return redirect()->back();
-        }
+    if ($query) {
+        return redirect()->route('login');
+    } else {
+        return redirect()->back();
     }
-}
+}}

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Pengguna</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <title>Riwayat Absen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -92,6 +92,7 @@
             padding: 20px;
             overflow-y: auto;
         }
+
     </style>
 </head>
 <body>
@@ -101,9 +102,11 @@
             <li><a href="{{ route('dashboard.index') }}">Home</a></li>
             <li><a href="{{ route('dashboard.showDataPengguna') }}">Data Pengguna</a></li>
             <li><a href="{{ route('dashboard.absenKaryawan') }}">Absen</a></li>
+            <li><a href="{{ route('riwayat_absen.index') }}">Riwayat Absen</a></li>
             <li><a href="{{ route('profil.show') }}">Profil</a></li>
             <li><a href="{{ route('pengumuman.index') }}">Pengumuman</a></li>
-            <li><a href="#">Informasi</a></li>
+            <li><a href="{{ route('informasi.gaji') }}">Informasi</a></li>
+    
         </ul>
         <div class="logout">
             <a href="{{ route('login.logout') }}" class="btn btn-danger">Logout</a>
@@ -113,54 +116,72 @@
         <header>
             <nav class="navbar">
                 <button class="toggle-btn" id="toggle-btn">☰</button>
-                <h1>Data Pengguna</h1>
+                <h1>Riwayat Absen</h1>
                 <div class="profile">
-                    <span>{{ Auth::user()->name }}</span>
+                    @if(Auth::check())
+                        <span>{{ Auth::user()->name }}</span>
+                    @else
+                        <span>Guest</span>
+                    @endif
                 </div>
             </nav>
         </header>
-
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-10">
-                <h1>Tabel Data Pengguna</h1>
-
-
-                <table class="table">
-                    <thead>
+        <main>
+            
+            <div class="container mt-4">
+                <!-- <h2>Riwayat Absen</h2> -->
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+                <table class="table table-bordered table-white">
+                    <thead class="table-primary">
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">NIP</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Level</th>
+                            <th>Name</th>
+                            <th>NIP</th>
+                            <th>Jabatan</th>
+                            <th>Photo</th>
+                            <th>Lokasi</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $n= 1;
-                        @endphp
-                        @foreach ($users as $user)
-                        <tr>
-                            <th scope="row">{{ $n }}</th>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->nip }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ ($user->is_admin)== 1 ? "Admin" : "Pegawai" }}</td>
-                        </tr>
-                        @php
-                            $n++;
-                        @endphp
+                        @foreach($riwayatAbsens as $riwayatAbsen)
+                            <tr>
+                                <td>{{ $riwayatAbsen->name }}</td>
+                                <td>{{ $riwayatAbsen->nip }}</td>
+                                <td>{{ $riwayatAbsen->jabatan }}</td>
+                                <td><img src="{{ asset('uploads/' . $riwayatAbsen->photo) }}" alt="Photo" class="img-thumbnail" width="50"></td>
+                                <td>{{ $riwayatAbsen->location_name }}</td>
+                                <td>{{ $riwayatAbsen->status }}</td>
+                                <td>
+                                    <div class="d-flex">
+                                    <form action="{{ route('riwayat_absen.terima', $riwayatAbsen->id) }}" method="POST" class="me-2">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm">Terima</button>
+                                    </form>
+                                    <form action="{{ route('riwayat_absen.tolak', $riwayatAbsen->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
+                                    </form>
+
+                                    </div>
+                                </td>
+                            </tr>
                         @endforeach
-
-
                     </tbody>
-                  </table>
+                </table>
             </div>
-        </div>
+        </main>
     </div>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('hide');
+            document.getElementById('main-content').classList.toggle('expanded');
+        });
+    </script>
 </body>
 </html>

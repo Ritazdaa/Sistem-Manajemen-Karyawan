@@ -50,11 +50,16 @@
                     <div class="form-container text-center">
                         <h5 class="text-center">Registrasi Pengguna Baru</h5>
                         <form method="post" action="{{ route('register.store') }}">
-                            <br>
-                            <div class="mb-3">
-                                <label for="namaInput" class="form-label">Nama</label>
-                                <input type="text" class="form-control @error('namaInput') is-invalid @enderror" id="namaInput" name="namaInput" value="{{ old('namaInput') }}">
-                            </div>
+    @csrf
+    <div class="mb-3">
+        <label for="namaInput" class="form-label">Nama</label>
+        <input type="text" class="form-control @error('namaInput') is-invalid @enderror" id="namaInput" name="namaInput" value="{{ old('namaInput') }}">
+        @error('namaInput')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+        @enderror
+    </div>
 
         <!-- <div class="container p-3">
             <h1 class="text-center">Registrasi Pengguna Baru</h1>
